@@ -1,0 +1,2 @@
+{"username":"admin","password":"admin123","role":"admin","createdAt":"2026-06-08T01:17:47.548Z","_id":"QcDfOfRyW0qky23M"}
+{"$$indexCreated":{"fieldName":"username","unique":true,"sparse":false}}

@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu Kami — Noctua Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css?v=2" />
+    <link rel="manifest" href="/manifest.json">
+
+    <meta name="theme-color" content="#6f4e37">
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/index.html" class="nav-logo">🦉 NOCTUA</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">Beranda</a></li>
+        <li><a href="/menu.html" class="active">Menu</a></li>
+        <li><a href="/about.html">Tentang Kami</a></li>
+        <li><a href="/contact.html">Lokasi</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle tema">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+        <button class="nav-toggle" id="navToggle">☰</button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="page-hero">
+        <p class="section-label">— Dibuat Setiap Hari —</p>
+        <h1>Menu Kami</h1>
+        <p>Setiap pesanan dibuat segar. Setiap tegukan penuh makna.</p>
+      </section>
+
+      <section class="section menu-section">
+        <div class="menu-filters">
+          <button class="filter-btn active" data-filter="all">Semua</button>
+          <button class="filter-btn" data-filter="espresso">Espresso</button>
+          <button class="filter-btn" data-filter="milk">Berbasis Susu</button>
+          <button class="filter-btn" data-filter="cold">Cold Brew</button>
+          <button class="filter-btn" data-filter="nonCoffee">Non Kopi</button>
+          <button class="filter-btn" data-filter="food">Makanan</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+          <p style="grid-column: 1/-1; text-align: center; color: var(--text-dim);">Memuat menu...</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">🦉 NOCTUA COFFEE</span>
+          <p>Dibuat dengan penuh perhatian. Disajikan dengan jiwa.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/index.html">Beranda</a><a href="/menu.html">Menu</a>
+          <a href="/about.html">Tentang Kami</a
+          ><a href="/contact.html">Lokasi</a>
+        </div>
+        <div class="footer-info">
+          <p>☕ Senin–Minggu · 07.00–22.00</p>
+          <p>📍 Jl. Kopi Malam No.7, Kudus</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Noctua Coffee. Dibangun dengan Node.js & Express.js</p>
+      </div>
+    </footer>
+
+    <!-- SHOPPING CART FLOATING BUTTON -->
+    <button class="floating-cart" id="floatingCartBtn" style="display: none;">
+      🛒
+      <span class="floating-cart-badge" id="cartBadge">0</span>
+    </button>
+
+    <!-- CART MODAL -->
+    <div class="modal-overlay" id="cartModal">
+      <div class="customer-modal">
+        <h2>Keranjang Belanja</h2>
+        
+        <div class="cart-items-list" id="cartItemsList">
+          <!-- Cart items rendered dynamically -->
+        </div>
+        
+        <div class="cart-total-section">
+          <span>Total Bayar:</span>
+          <span class="cart-total-price" id="cartTotalPrice">Rp 0</span>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.2rem;">
+          <label>Metode Pembayaran</label>
+          <div class="payment-selector">
+            <button class="payment-btn active" id="btnPayCash">Cash / Tunai</button>
+            <button class="payment-btn" id="btnPayQris">QRIS (Scan QR)</button>
+          </div>
+        </div>
+        
+        <!-- QRIS Container -->
+        <div class="qris-container" id="qrisContainer" style="display: none;">
+          <div class="qris-logo">QRIS - LUNAS</div>
+          <img src="/images/qris-mockup.png" alt="QRIS Code" class="qris-code-img" />
+          <p class="qris-instruction">Scan kode QR di atas untuk melakukan pembayaran melalui e-wallet / m-banking.</p>
+        </div>
+        
+        <!-- Customer Info Form -->
+        <div class="customer-form">
+          <div class="form-group">
+            <label for="custName">Nama Pemesan *</label>
+            <input type="text" id="custName" placeholder="Masukkan nama Anda..." required />
+          </div>
+          <div class="form-group">
+            <label for="custTable">Nomor Meja / Catatan</label>
+            <input type="text" id="custTable" placeholder="Contoh: Meja 5 / Takeaway..." />
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="btnCloseCart">Batal</button>
+          <button class="btn btn-primary" id="btnSubmitOrder">Pesan Sekarang</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECEIPT MODAL -->
+    <div class="modal-overlay" id="receiptModal">
+      <div class="customer-modal" style="background: transparent; border: none; padding: 0; box-shadow: none;">
+        <div class="receipt-box" id="receiptContent">
+          <!-- Receipt content rendered dynamically -->
+        </div>
+        <div class="modal-actions" style="margin-top: 1.5rem; justify-content: center;">
+          <button class="btn btn-primary" id="btnCloseReceipt" style="padding: 0.8rem 3rem;">Selesai</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script>
+      // ============================================================
+      // 🛒 STATE GLOBAL & MANAJEMEN DATA LOKAL
+      // ============================================================
+      let cart = []; // Menyimpan item belanja: { id, name, price, qty }
+      let activePaymentMethod = 'Cash'; // Metode default pembayaran
+
+      // Algoritma 1: Memuat data keranjang belanja yang tersimpan di localStorage browser
+      try {
+        const storedCart = localStorage.getItem("noctua_cart");
+        if (storedCart) cart = JSON.parse(storedCart);
+      } catch (e) {
+        console.error("Gagal memuat keranjang dari localStorage:", e);
+      }
+
+      // ============================================================
+      // 🎬 INISIALISASI HALAMAN & ROUTING DATA
+      // ============================================================
+      document.addEventListener("DOMContentLoaded", () => {
+        // Mendeklarasikan seluruh elemen DOM yang dibutuhkan
+        const menuGrid = document.getElementById("menuGrid");
+        const floatingCartBtn = document.getElementById("floatingCartBtn");
+        const cartBadge = document.getElementById("cartBadge");
+        const cartModal = document.getElementById("cartModal");
+        const qrisContainer = document.getElementById("qrisContainer");
+        const btnPayCash = document.getElementById("btnPayCash");
+        const btnPayQris = document.getElementById("btnPayQris");
+        const btnCloseCart = document.getElementById("btnCloseCart");
+        const btnSubmitOrder = document.getElementById("btnSubmitOrder");
+        const receiptModal = document.getElementById("receiptModal");
+        const btnCloseReceipt = document.getElementById("btnCloseReceipt");
+
+        // Jalankan sinkronisasi awal angka badge keranjang belanja
+        updateCartBadge();
+
+        // Algoritma 2: Mengambil data menu dari server backend secara Asinkronus (AJAX)
+        fetch("/api/menu")
+          .then(res => res.json())
+          .then(resData => {
+            if (!resData.sukses) {
+              throw new Error(resData.pesan || "Gagal mengambil data menu");
+            }
+            
+            const items = resData.data || [];
+            menuGrid.innerHTML = "";
+
+            // Penanganan jika menu kosong
+            if (items.length === 0) {
+              menuGrid.innerHTML = `
+                <div class="empty-state">
+                  <span>☕</span>
+                  <p>Belum ada menu yang tersedia saat ini.</p>
+                </div>
+              `;
+              return;
+            }
+
+            // Algoritma 3: Rendering data Menu ke bentuk kartu-kartu HTML secara dinamis
+            items.forEach(item => {
+              const isAvailable = item.tersedia !== false;
+              const card = document.createElement("div");
+              card.className = `menu-card ${isAvailable ? "" : "habis"}`;
+              card.setAttribute("data-category", item.category || "espresso");
+
+              // Normalisasi alamat URL gambar menu
+              const imgUrl = window.normalizeImagePath ? window.normalizeImagePath(item.img) : item.img;
+              const imgTag = imgUrl 
+                ? `<img src="${imgUrl}" alt="${item.name}" class="menu-card-img" loading="lazy" onerror="this.style.display = 'none'; this.nextElementSibling.style.display = 'flex';" />` 
+                : "";
+              const displayStyle = imgUrl ? "style='display: none;'" : "style='display: flex;'";
+
+              card.innerHTML = `
+                <div class="menu-card-img-wrap">
+                  ${imgTag}
+                  <div class="img-placeholder" ${displayStyle}>${item.fallback || "☕"}</div>
+                </div>
+                <div class="menu-card-info">
+                  <h3>${item.name}</h3>
+                  <p>${item.desc || ""}</p>
+                </div>
+                <div class="menu-card-footer">
+                  <span class="menu-price">Rp ${(item.price || 0).toLocaleString("id-ID")}</span>
+                  ${isAvailable 
+                    ? `<span class="menu-cat">${item.category}</span>` 
+                    : `<span class="badge-status-habis">Habis</span>`}
+                </div>
+                <button class="btn-add-cart" ${isAvailable ? "" : "disabled"} onclick="handleAddToCart('${item._id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})">
+                  ${isAvailable ? "+ Tambah" : "Habis"}
+                </button>
+              `;
+              menuGrid.appendChild(card);
+            });
+
+            // Jalankan animasi Scroll Reveal untuk efek pemuatan halus
+            if (window.applyScrollReveal) {
+              window.applyScrollReveal(".menu-card");
+            }
+
+            // Algoritma 4: Penerapan filter aktif berdasarkan pilihan kategori menu
+            const activeFilterBtn = document.querySelector(".filter-btn.active");
+            if (activeFilterBtn) {
+              const filter = activeFilterBtn.dataset.filter;
+              if (filter && filter !== "all") {
+                document.querySelectorAll(".menu-card").forEach(card => {
+                  if (card.dataset.category === filter) {
+                    card.classList.remove("hidden");
+                  } else {
+                    card.classList.add("hidden");
+                  }
+                });
+              }
+            }
+          })
+          .catch(err => {
+            console.error("Gagal memuat menu:", err);
+            menuGrid.innerHTML = `
+              <div class="empty-state" style="border-color: var(--red);">
+                <span style="color: var(--red);">⚠️</span>
+                <p>Gagal memuat data menu. Silakan coba beberapa saat lagi.</p>
+              </div>
+            `;
+          });
+
+        // ============================================================
+        // 🎮 EVENT BINDING (KLIK & NAVIGASI MODAL)
+        // ============================================================
+        
+        // Membuka modal keranjang saat tombol keranjang melayang diklik
+        floatingCartBtn.addEventListener("click", () => {
+          openCartModal();
+        });
+
+        // Menutup modal keranjang
+        btnCloseCart.addEventListener("click", () => {
+          closeCartModal();
+        });
+
+        // Pengaturan metode pembayaran (Cash atau QRIS)
+        btnPayCash.addEventListener("click", () => {
+          selectPayment('Cash');
+        });
+        btnPayQris.addEventListener("click", () => {
+          selectPayment('QRIS');
+        });
+
+        // Eksekusi pesanan saat tombol "Pesan Sekarang" diklik
+        btnSubmitOrder.addEventListener("click", () => {
+          handleOrderSubmit();
+        });
+
+        // Menutup struk belanja setelah transaksi selesai
+        btnCloseReceipt.addEventListener("click", () => {
+          receiptModal.classList.remove("open");
+        });
+
+        // Menutup modal ketika pengguna mengklik area luar modal (backdrop overlay)
+        cartModal.addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) closeCartModal();
+        });
+      });
+
+      // ============================================================
+      // 🛠️ ALGORITMA UTAMA MANAJEMEN KERANJANG BELANJA (CART HELPERS)
+      // ============================================================
+
+      // Fungsi 1: Sinkronisasi jumlah item keranjang dengan badge merah tombol melayang
+      function updateCartBadge() {
+        const cartBadge = document.getElementById("cartBadge");
+        const floatingCartBtn = document.getElementById("floatingCartBtn");
+        if (!cartBadge || !floatingCartBtn) return;
+        
+        const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+        cartBadge.textContent = totalQty;
+        
+        // Tampilkan tombol melayang jika ada isi keranjang, sembunyikan jika kosong
+        if (totalQty > 0) {
+          floatingCartBtn.style.display = "flex";
+        } else {
+          floatingCartBtn.style.display = "none";
+        }
+      }
+
+      // Fungsi 2: Algoritma penambahan item ke dalam keranjang
+      window.handleAddToCart = function(id, name, price) {
+        const existing = cart.find(item => item.id === id);
+        
+        if (existing) {
+          existing.qty += 1; // Jika item sudah ada, tambah kuantitasnya
+        } else {
+          cart.push({ id, name, price, qty: 1 }); // Jika item baru, masukkan ke array
+        }
+
+        // Simpan hasil ke localStorage agar data tidak hilang ketika halaman dimuat ulang
+        localStorage.setItem("noctua_cart", JSON.stringify(cart));
+        updateCartBadge();
+        
+        // Berikan efek micro-animation (pop-up scale) pada tombol keranjang melayang
+        const btn = document.getElementById("floatingCartBtn");
+        if (btn) {
+          btn.style.transform = "scale(1.25) translateY(-4px)";
+          setTimeout(() => {
+            btn.style.transform = "";
+          }, 200);
+        }
+      };
+
+      // Fungsi 3: Membuka modal dan menyusun data keranjang terbaru
+      function openCartModal() {
+        renderCartItems();
+        document.getElementById("custName").value = "";
+        document.getElementById("custTable").value = "";
+        selectPayment('Cash'); // Kembalikan ke metode Cash secara default
+        document.getElementById("cartModal").classList.add("open");
+      }
+
+      // Fungsi 4: Menutup modal keranjang belanja
+      function closeCartModal() {
+        document.getElementById("cartModal").classList.remove("open");
+      }
+
+      // Fungsi 5: Algoritma memilih metode pembayaran (Cash / QRIS)
+      function selectPayment(method) {
+        activePaymentMethod = method;
+        const btnPayCash = document.getElementById("btnPayCash");
+        const btnPayQris = document.getElementById("btnPayQris");
+        const qrisContainer = document.getElementById("qrisContainer");
+
+        if (method === 'Cash') {
+          btnPayCash.classList.add("active");
+          btnPayQris.classList.remove("active");
+          qrisContainer.style.display = "none"; // Sembunyikan QR Code
+        } else {
+          btnPayCash.classList.remove("active");
+          btnPayQris.classList.add("active");
+          qrisContainer.style.display = "flex"; // Tampilkan QR Code QRIS
+        }
+      }
+
+      // Fungsi 6: Render item keranjang ke dalam antarmuka modal
+      function renderCartItems() {
+        const listContainer = document.getElementById("cartItemsList");
+        const totalPriceEl = document.getElementById("cartTotalPrice");
+        if (!listContainer || !totalPriceEl) return;
+
+        if (cart.length === 0) {
+          listContainer.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:1rem 0;">Keranjang kosong.</p>';
+          totalPriceEl.textContent = "Rp 0";
+          return;
+        }
+
+        let total = 0;
+        listContainer.innerHTML = cart.map(item => {
+          const itemTotal = item.price * item.qty;
+          total += itemTotal;
+          return `
+            <div class="cart-item">
+              <span class="cart-item-name">${item.name}</span>
+              <div class="cart-item-qty-wrap">
+                <button class="btn-qty" onclick="changeQty('${item.id}', -1)">-</button>
+                <span class="cart-item-qty">${item.qty}</span>
+                <button class="btn-qty" onclick="changeQty('${item.id}', 1)">+</button>
+              </div>
+              <span class="cart-item-price">Rp ${itemTotal.toLocaleString("id-ID")}</span>
+              <button class="btn-remove-item" onclick="removeCartItem('${item.id}')">🗑</button>
+            </div>
+          `;
+        }).join("");
+
+        totalPriceEl.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+      }
+
+      // Fungsi 7: Algoritma memperbarui kuantitas item (tambah/kurang)
+      window.changeQty = function(id, delta) {
+        const item = cart.find(x => x.id === id);
+        if (!item) return;
+        
+        item.qty += delta;
+        
+        // Hapus item dari keranjang jika jumlahnya menjadi 0 atau minus
+        if (item.qty <= 0) {
+          cart = cart.filter(x => x.id !== id);
+        }
+        
+        localStorage.setItem("noctua_cart", JSON.stringify(cart));
+        updateCartBadge();
+        renderCartItems();
+        if (cart.length === 0) closeCartModal();
+      };
+
+      // Fungsi 8: Menghapus item tertentu sepenuhnya dari keranjang belanja
+      window.removeCartItem = function(id) {
+        cart = cart.filter(x => x.id !== id);
+        localStorage.setItem("noctua_cart", JSON.stringify(cart));
+        updateCartBadge();
+        renderCartItems();
+        if (cart.length === 0) closeCartModal();
+      };
+
+      // ============================================================
+      // 💳 PROSES TRANSAKSI & PEMBUATAN STRUK BELANJA (CHECKOUT)
+      // ============================================================
+
+      // Fungsi 9: Algoritma mengirimkan data pesanan (checkout) ke server backend
+      function handleOrderSubmit() {
+        const name = document.getElementById("custName").value.trim();
+        const table = document.getElementById("custTable").value.trim();
+
+        // Validasi input pemesanan
+        if (cart.length === 0) {
+          alert("Keranjang belanja kosong!");
+          return;
+        }
+        if (!name) {
+          alert("Nama pemesan wajib diisi!");
+          return;
+        }
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+        // Susun objek data pesanan sesuai kebutuhan API
+        const orderData = {
+          customerName: name,
+          tableNumber: table,
+          items: cart.map(item => ({
+            menuId: item.id,
+            name: item.name,
+            price: item.price,
+            qty: item.qty
+          })),
+          paymentMethod: activePaymentMethod,
+          total: total
+        };
+
+        // Kirim pesanan ke endpoint backend POST /api/orders
+        fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderData)
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (!data.sukses) {
+              throw new Error(data.pesan || "Gagal mengirim pesanan");
+            }
+            
+            // Render Struk belanja dinamis dari data balikan server
+            renderReceipt(data.data);
+            
+            // Kosongkan keranjang belanja setelah sukses memesan
+            cart = [];
+            localStorage.removeItem("noctua_cart");
+            updateCartBadge();
+            closeCartModal();
+
+            // Tampilkan modal struk belanja ke pelanggan
+            document.getElementById("receiptModal").classList.add("open");
+          })
+          .catch(err => {
+            alert("Terjadi kesalahan transaksi: " + err.message);
+          });
+      }
+
+      // Fungsi 10: Algoritma penyusunan template struk fisik belanja (receipt)
+      function renderReceipt(order) {
+        const receiptEl = document.getElementById("receiptContent");
+        if (!receiptEl) return;
+
+        const dateStr = new Date(order.createdAt).toLocaleString("id-ID", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        receiptEl.innerHTML = `
+          <div class="receipt-header">
+            <span class="receipt-title">🦉 NOCTUA COFFEE</span>
+            <p style="margin-top: 0.2rem; font-size: 0.65rem; color: #665544;">Jl. Kopi Malam No.7, Kudus</p>
+          </div>
+          <div class="receipt-row">
+            <span>NO. INVOICE:</span>
+            <strong>${order.invoiceId}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>WAKTU:</span>
+            <span>${dateStr}</span>
+          </div>
+          <div class="receipt-row">
+            <span>NAMA PEMESAN:</span>
+            <strong>${order.customerName}</strong>
+          </div>
+          <div class="receipt-row">
+            <span>MEJA/TIKET:</span>
+            <strong>${order.tableNumber}</strong>
+          </div>
+          <div class="receipt-dashed-line"></div>
+          
+          ${order.items.map(item => `
+            <div class="receipt-item-row">
+              <span>${item.name}</span>
+              <span style="text-align: center;">x${item.qty}</span>
+              <span class="receipt-item-price">Rp ${(item.price * item.qty).toLocaleString("id-ID")}</span>
+            </div>
+          `).join("")}
+
+          <div class="receipt-dashed-line"></div>
+          <div class="receipt-row receipt-total">
+            <span>TOTAL HARGA:</span>
+            <span>Rp ${order.total.toLocaleString("id-ID")}</span>
+          </div>
+          <div class="receipt-row">
+            <span>METODE BAYAR:</span>
+            <strong>${order.paymentMethod === 'QRIS' ? 'QRIS (LUNAS)' : 'CASH (BAYAR DI KASIR)'}</strong>
+          </div>
+          <div class="receipt-footer">
+            <p>Terima kasih atas kunjungan Anda!</p>
+            <p>Silakan tunjukkan struk ini ke kasir jika membayar cash.</p>
+          </div>
+        `;
+      }
+    </script>
+  </body>
+</html>

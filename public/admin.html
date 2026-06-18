@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel — Noctua Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Lucide Icons for Premium UI -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root {
+        --bg: #0a0806;
+        --bg2: #110e0a;
+        --bg3: #1a1410;
+        --surface: #1f1812;
+        --surface2: #2a2018;
+        --border: #3a2e22;
+        --gold: #c9a84c;
+        --gold-light: #e8c96e;
+        --cream: #f5ede0;
+        --text: #e8ddd0;
+        --text-dim: #9a8e80;
+        --green: #2ecc71;
+        --red: #e74c3c;
+        --blue: #3498db;
+        --orange: #e67e22;
+        --font-serif: "Cormorant Garamond", Georgia, serif;
+        --font-mono: "Space Mono", monospace;
+        --radius: 4px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font-mono);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 13px;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: 220px;
+        background: var(--bg2);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+      }
+      .sidebar-logo {
+        padding: 1.5rem 1.2rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-logo span {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        color: var(--gold);
+        letter-spacing: 2px;
+      }
+      .sidebar-logo p {
+        font-size: 0.6rem;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+        margin-top: 0.2rem;
+      }
+      .sidebar-nav {
+        padding: 1rem 0;
+        flex: 1;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 2px solid transparent;
+      }
+      .nav-item:hover {
+        color: var(--text);
+        background: var(--surface);
+      }
+      .nav-item.active {
+        color: var(--gold);
+        border-left-color: var(--gold);
+        background: var(--surface);
+      }
+      .nav-item .icon {
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+      }
+      .sidebar-footer {
+        padding: 1rem 1.2rem;
+        border-top: 1px solid var(--border);
+      }
+      .sidebar-footer a {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        text-decoration: none;
+        letter-spacing: 1px;
+      }
+      .sidebar-footer a:hover {
+        color: var(--gold);
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: 220px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        background: var(--bg2);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+      .topbar h1 {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        color: var(--cream);
+        font-weight: 300;
+      }
+      .topbar-info {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        padding: 2rem;
+        flex: 1;
+      }
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+
+      /* ── STATS CARDS ── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 1.2rem;
+        border-radius: var(--radius);
+        text-align: center;
+      }
+      .stat-card .num {
+        font-family: var(--font-serif);
+        font-size: 2.2rem;
+        font-weight: 300;
+        display: block;
+      }
+      .stat-card .lbl {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .stat-card.gold .num {
+        color: var(--gold);
+      }
+      .stat-card.green .num {
+        color: var(--green);
+      }
+      .stat-card.blue .num {
+        color: var(--blue);
+      }
+      .stat-card.red .num {
+        color: var(--red);
+      }
+
+      /* ── TABLE ── */
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.75rem;
+      }
+      thead tr {
+        border-bottom: 1px solid var(--gold);
+      }
+      th {
+        padding: 0.8rem 0.7rem;
+        text-align: left;
+        color: var(--gold);
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+      td {
+        padding: 0.75rem 0.7rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: middle;
+      }
+      tr:hover td {
+        background: var(--surface);
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.2rem 0.5rem;
+        border-radius: 2px;
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .badge-green {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--green);
+      }
+      .badge-red {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--red);
+      }
+      .badge-gold {
+        background: rgba(201, 168, 76, 0.15);
+        color: var(--gold);
+      }
+      .badge-blue {
+        background: rgba(52, 152, 219, 0.15);
+        color: var(--blue);
+      }
+
+      /* ── BUTTONS ── */
+      .btn {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        padding: 0.45rem 0.9rem;
+        border-radius: var(--radius);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-gold {
+        background: var(--gold);
+        color: var(--bg);
+        font-weight: 700;
+      }
+      .btn-gold:hover {
+        background: var(--gold-light);
+      }
+      .btn-red {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--red);
+        border: 1px solid var(--red);
+      }
+      .btn-red:hover {
+        background: var(--red);
+        color: white;
+      }
+      .btn-blue {
+        background: rgba(52, 152, 219, 0.15);
+        color: var(--blue);
+        border: 1px solid var(--blue);
+      }
+      .btn-blue:hover {
+        background: var(--blue);
+        color: white;
+      }
+      .btn-green {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--green);
+        border: 1px solid var(--green);
+      }
+      .btn-green:hover {
+        background: var(--green);
+        color: white;
+      }
+      .btn-sm {
+        padding: 0.3rem 0.65rem;
+        font-size: 0.6rem;
+      }
+
+      /* ── FORM / MODAL ── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+      .section-header h2 {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        color: var(--cream);
+        font-weight: 300;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2rem;
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal h3 {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        color: var(--cream);
+        margin-bottom: 1.5rem;
+        font-weight: 300;
+      }
+      .form-group {
+        margin-bottom: 1.1rem;
+      }
+      .form-group label {
+        display: block;
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 0.4rem;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        padding: 0.7rem 0.9rem;
+        border-radius: var(--radius);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--gold);
+      }
+      .form-group select option {
+        background: var(--surface);
+      }
+      .modal-actions {
+        display: flex;
+        gap: 0.7rem;
+        margin-top: 1.5rem;
+        justify-content: flex-end;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 200;
+        padding: 0.9rem 1.5rem;
+        border-radius: var(--radius);
+        font-size: 0.75rem;
+        display: none;
+        animation: slideIn 0.3s ease;
+      }
+      .toast.show {
+        display: block;
+      }
+      .toast.success {
+        background: rgba(46, 204, 113, 0.2);
+        border: 1px solid var(--green);
+        color: var(--green);
+      }
+      .toast.error {
+        background: rgba(231, 76, 60, 0.2);
+        border: 1px solid var(--red);
+        color: var(--red);
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* ── SEARCH ── */
+      .search-bar {
+        margin-bottom: 1.2rem;
+      }
+      .search-bar input {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        padding: 0.65rem 1rem;
+        border-radius: var(--radius);
+        outline: none;
+        width: 280px;
+        transition: border-color 0.2s;
+      }
+      .search-bar input:focus {
+        border-color: var(--gold);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-dim);
+        font-size: 0.8rem;
+      }
+      .empty-state span {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      /* ── TOGGLE ── */
+      .toggle {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background: var(--border);
+        border-radius: 20px;
+        transition: 0.3s;
+      }
+      .toggle-slider:before {
+        content: "";
+        position: absolute;
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        border-radius: 50%;
+        transition: 0.3s;
+      }
+      input:checked + .toggle-slider {
+        background: var(--green);
+      }
+      input:checked + .toggle-slider:before {
+        transform: translateX(16px);
+      }
+
+      .img-thumb {
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+      }
+      .fallback-thumb {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface2);
+        border-radius: var(--radius);
+        font-size: 1.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span>🦉 NOCTUA</span>
+        <p>ADMIN PANEL</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active" id="nav-dashboard" onclick="showPanel('dashboard')">
+          <i data-lucide="layout-dashboard" class="icon" style="width: 14px; height: 14px; margin-right: 0.5rem; display: inline-block; vertical-align: middle;"></i> Dashboard
+        </div>
+        <div class="nav-item" id="nav-menu" onclick="showPanel('menu')">
+          <i data-lucide="coffee" class="icon" style="width: 14px; height: 14px; margin-right: 0.5rem; display: inline-block; vertical-align: middle;"></i> Kelola Menu
+        </div>
+        <div class="nav-item" id="nav-orders" onclick="showPanel('orders')">
+          <i data-lucide="shopping-bag" class="icon" style="width: 14px; height: 14px; margin-right: 0.5rem; display: inline-block; vertical-align: middle;"></i> Kelola Pesanan
+          <span
+            id="newOrdersBadge"
+            style="
+              display: none;
+              margin-left: auto;
+              background: var(--gold);
+              color: var(--bg);
+              font-weight: 700;
+              border-radius: 10px;
+              padding: 1px 6px;
+              font-size: 0.6rem;
+            "
+          ></span>
+        </div>
+        <div class="nav-item" id="nav-contacts" onclick="showPanel('contacts')">
+          <i data-lucide="mail" class="icon" style="width: 14px; height: 14px; margin-right: 0.5rem; display: inline-block; vertical-align: middle;"></i> Pesan Masuk
+          <span
+            id="unreadBadge"
+            style="
+              display: none;
+              margin-left: auto;
+              background: var(--red);
+              color: white;
+              border-radius: 10px;
+              padding: 1px 6px;
+              font-size: 0.6rem;
+            "
+          ></span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/index.html">← Kembali ke Website</a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <h1 id="pageTitle">Dashboard</h1>
+        <div style="display: flex; align-items: center; gap: 1.5rem">
+          <span class="topbar-info" id="topbarInfo">Memuat...</span>
+          <button id="logoutBtn" class="btn btn-red" style="font-size: 0.65rem">
+            🚪 Logout
+          </button>
+        </div>
+      </div>
+      <div class="content">
+        <!-- ════════ PANEL DASHBOARD ════════ -->
+        <div class="panel active" id="panel-dashboard">
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-card gold">
+              <span class="num" id="statRevenue">Rp 0</span>
+              <span class="lbl">Pendapatan (Selesai)</span>
+            </div>
+            <div class="stat-card green">
+              <span class="num" id="statOrders">—</span>
+              <span class="lbl">Total Pesanan</span>
+            </div>
+            <div class="stat-card blue">
+              <span class="num" id="statNewOrdersStats">—</span>
+              <span class="lbl">Pesanan Baru</span>
+            </div>
+            <div class="stat-card red">
+              <span class="num" id="statBelumDibaca">—</span>
+              <span class="lbl">Pesan Masuk Baru</span>
+            </div>
+          </div>
+          <div
+            style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              padding: 1.5rem;
+              border-radius: var(--radius);
+            "
+          >
+            <h3
+              style="
+                font-family: var(--font-serif);
+                color: var(--cream);
+                font-weight: 300;
+                margin-bottom: 1rem;
+              "
+            >
+              📋 Menu Terbaru
+            </h3>
+            <div id="dashMenuList"></div>
+          </div>
+        </div>
+
+        <!-- ════════ PANEL MENU ════════ -->
+        <div class="panel" id="panel-menu">
+          <div class="section-header">
+            <h2>Kelola Menu</h2>
+            <button class="btn btn-gold" onclick="bukaModalTambah()">
+              + Tambah Menu
+            </button>
+          </div>
+          <div class="search-bar">
+            <input
+              type="text"
+              id="searchMenu"
+              placeholder="🔍  Cari nama menu..."
+              oninput="filterMenu()"
+            />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Gambar</th>
+                  <th>Nama</th>
+                  <th>Kategori</th>
+                  <th>Harga</th>
+                  <th>Tersedia</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="menuTableBody"></tbody>
+            </table>
+          </div>
+          <div id="menuEmpty" class="empty-state" style="display: none">
+            <span>☕</span>Belum ada menu. Tambahkan yang pertama!
+          </div>
+        </div>
+
+        <!-- ════════ PANEL KONTAK ════════ -->
+        <div class="panel" id="panel-contacts">
+          <div class="section-header">
+            <h2>Pesan Masuk</h2>
+            <button class="btn btn-red btn-sm" onclick="hapusSemua()">
+              🗑 Hapus Semua Dibaca
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Pesan</th>
+                  <th>Waktu</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="contactTableBody"></tbody>
+            </table>
+          </div>
+          <div id="contactEmpty" class="empty-state" style="display: none">
+            <span>📭</span>Belum ada pesan masuk.
+          </div>
+        </div>
+
+        <!-- ════════ PANEL PESANAN ════════ -->
+        <div class="panel" id="panel-orders">
+          <div class="section-header">
+            <h2>Kelola Pesanan</h2>
+            <button class="btn btn-red btn-sm" onclick="hapusSemuaSelesaiBatalOrders()">
+              🗑 Hapus Selesai & Batal
+            </button>
+          </div>
+          <div class="search-bar">
+            <input
+              type="text"
+              id="searchOrders"
+              placeholder="🔍  Cari nama/invoice..."
+              oninput="filterOrders()"
+            />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Invoice</th>
+                  <th>Waktu</th>
+                  <th>Pelanggan</th>
+                  <th>Meja</th>
+                  <th>Item Pesanan</th>
+                  <th>Total</th>
+                  <th>Bayar</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="orderTableBody"></tbody>
+            </table>
+          </div>
+          <div id="orderEmpty" class="empty-state" style="display: none">
+            <span>🛍</span>Belum ada pesanan masuk.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ MODAL TAMBAH / EDIT MENU ════════ -->
+    <div class="modal-overlay" id="modalMenu">
+      <div class="modal">
+        <h3 id="modalTitle">Tambah Menu Baru</h3>
+        <input type="hidden" id="editId" />
+        <div class="form-group">
+          <label>Nama Menu *</label>
+          <input type="text" id="fName" placeholder="Contoh: Noctua Espresso" />
+        </div>
+        <div class="form-group">
+          <label>Kategori *</label>
+          <select id="fCategory">
+            <option value="espresso">Espresso</option>
+            <option value="milk">Berbasis Susu</option>
+            <option value="cold">Cold Brew</option>
+            <option value="nonCoffee">Non Kopi</option>
+            <option value="food">Makanan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Harga (Rp) *</label>
+          <input type="number" id="fPrice" placeholder="Contoh: 35000" />
+        </div>
+        <div class="form-group">
+          <label>Deskripsi</label>
+          <textarea
+            id="fDesc"
+            rows="3"
+            placeholder="Deskripsi singkat menu..."
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label>Path Gambar</label>
+          <input type="text" id="fImg" placeholder="/images/nama-foto.jpg" />
+        </div>
+        <div class="form-group">
+          <label>Emoji Fallback</label>
+          <input type="text" id="fFallback" placeholder="☕" maxlength="4" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-red" onclick="tutupModal()">Batal</button>
+          <button class="btn btn-gold" onclick="simpanMenu()">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ MODAL DETAIL PESAN ════════ -->
+    <div class="modal-overlay" id="modalPesan">
+      <div class="modal">
+        <h3>Detail Pesan</h3>
+        <div class="form-group">
+          <label>Nama</label>
+          <input type="text" id="pNama" readonly style="opacity: 0.7" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="pEmail" readonly style="opacity: 0.7" />
+        </div>
+        <div class="form-group">
+          <label>Pesan</label>
+          <textarea
+            id="pPesan"
+            rows="5"
+            readonly
+            style="opacity: 0.7"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label>Waktu</label>
+          <input type="text" id="pWaktu" readonly style="opacity: 0.7" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-red" onclick="tutupModalPesan()">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      // ════════════════════════════════════════════════
+      //  STATE
+      // ════════════════════════════════════════════════
+      let allMenu = [];
+      let allContacts = [];
+
+      // ════════════════════════════════════════════════
+      //  INIT
+      // ════════════════════════════════════════════════
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Check authentication
+        await verifySession();
+
+        updateTopbar();
+        await loadDashboard();
+        
+        // Render Lucide Icons
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+        
+        setInterval(updateTopbar, 60000);
+
+        // Setup logout button
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", handleLogout);
+      });
+
+      // ════════════════════════════════════════════════
+      //  AUTHENTICATION
+      // ════════════════════════════════════════════════
+      async function verifySession() {
+        try {
+          const res = await fetch("/api/user");
+          if (!res.ok) throw new Error("Not authenticated");
+          const data = await res.json();
+          if (data.user) {
+            console.log("✅ Authenticated as:", data.user.username);
+          }
+        } catch (error) {
+          console.log("❌ Not authenticated, redirecting to login");
+          window.location.href = "/admin-login.html";
+        }
+      }
+
+      async function handleLogout() {
+        if (!confirm("Yakin ingin logout?")) return;
+
+        try {
+          const res = await fetch("/api/logout", { method: "POST" });
+          const data = await res.json();
+          if (data.sukses) {
+            tampilToast("✅ Logout berhasil", "success");
+            setTimeout(() => {
+              window.location.href = "/admin-login.html";
+            }, 500);
+          }
+        } catch (error) {
+          tampilToast("Gagal logout: " + error.message, "error");
+        }
+      }
+
+      function updateTopbar() {
+        const now = new Date();
+        const jam = now.getHours();
+        const buka = jam >= 7 && jam < 22;
+        document.getElementById("topbarInfo").innerHTML =
+          `${now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} &nbsp;|&nbsp;
+     <span style="color:${buka ? "var(--green)" : "var(--red)"}">● ${buka ? "Sedang Buka" : "Sudah Tutup"}</span>`;
+      }
+
+      // ════════════════════════════════════════════════
+      //  NAVIGASI PANEL
+      // ════════════════════════════════════════════════
+      const titles = {
+        dashboard: "Dashboard",
+        menu: "Kelola Menu",
+        orders: "Kelola Pesanan",
+        contacts: "Pesan Masuk",
+      };
+
+      function showPanel(name) {
+        document
+          .querySelectorAll(".panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById("panel-" + name).classList.add("active");
+        
+        const activeNav = document.getElementById("nav-" + name);
+        if (activeNav) {
+          activeNav.classList.add("active");
+        }
+        
+        document.getElementById("pageTitle").textContent = titles[name];
+        if (name === "dashboard") loadDashboard();
+        if (name === "menu") loadMenu();
+        if (name === "orders") loadOrders();
+        if (name === "contacts") loadContacts();
+      }
+
+      // ════════════════════════════════════════════════
+      //  DASHBOARD
+      // ════════════════════════════════════════════════
+      async function loadDashboard() {
+        try {
+          const [mRes, cRes, oRes] = await Promise.all([
+            fetch("/api/menu"),
+            fetch("/api/contacts"),
+            fetch("/api/orders"),
+          ]);
+          const mData = await mRes.json();
+          const cData = await cRes.json();
+          const oData = await oRes.json();
+          allMenu = mData.data || [];
+          allContacts = cData.data || [];
+          const allOrdersList = oData.data || [];
+
+          const completedOrders = allOrdersList.filter(o => o.status === 'selesai');
+          const revenue = completedOrders.reduce((sum, o) => sum + o.total, 0);
+          const newOrders = allOrdersList.filter(o => o.status === 'baru').length;
+          const unreadContacts = allContacts.filter((c) => !c.sudahDibaca).length;
+
+          document.getElementById("statRevenue").textContent = `Rp ${revenue.toLocaleString("id-ID")}`;
+          document.getElementById("statOrders").textContent = allOrdersList.length;
+          document.getElementById("statNewOrdersStats").textContent = newOrders;
+          document.getElementById("statBelumDibaca").textContent = unreadContacts;
+
+          // Sidebar badges
+          const newOrdersBadge = document.getElementById("newOrdersBadge");
+          if (newOrders > 0) {
+            newOrdersBadge.textContent = newOrders;
+            newOrdersBadge.style.display = "inline";
+          } else {
+            newOrdersBadge.style.display = "none";
+          }
+
+          const unreadBadge = document.getElementById("unreadBadge");
+          if (unreadContacts > 0) {
+            unreadBadge.textContent = unreadContacts;
+            unreadBadge.style.display = "inline";
+          } else {
+            unreadBadge.style.display = "none";
+          }
+
+          const dashList = document.getElementById("dashMenuList");
+          if (allMenu.length === 0) {
+            dashList.innerHTML =
+              '<p style="color:var(--text-dim); font-size:0.78rem;">Belum ada menu. <a href="#" onclick="showPanel(\'menu\')" style="color:var(--gold)">Tambahkan sekarang</a></p>';
+          } else {
+            dashList.innerHTML = `<table style="width:100%; font-size:0.75rem; border-collapse:collapse">
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:0.5rem; color:var(--text-dim); font-size:0.6rem; letter-spacing:2px">NAMA</td>
+          <td style="padding:0.5rem; color:var(--text-dim); font-size:0.6rem; letter-spacing:2px">KATEGORI</td>
+          <td style="padding:0.5rem; color:var(--text-dim); font-size:0.6rem; letter-spacing:2px">HARGA</td>
+          <td style="padding:0.5rem; color:var(--text-dim); font-size:0.6rem; letter-spacing:2px">STATUS</td>
+        </tr>
+        ${allMenu
+          .slice(0, 6)
+          .map(
+            (m) => `
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:0.5rem">${m.name}</td>
+            <td style="padding:0.5rem"><span class="badge badge-gold">${m.category}</span></td>
+            <td style="padding:0.5rem; color:var(--gold)">Rp ${m.price.toLocaleString("id-ID")}</td>
+            <td style="padding:0.5rem"><span class="badge ${m.tersedia ? "badge-green" : "badge-red"}">${m.tersedia ? "Tersedia" : "Habis"}</span></td>
+          </tr>`,
+          )
+          .join("")}
+      </table>`;
+          }
+        } catch (e) {
+          tampilToast("Gagal memuat dashboard", "error");
+        }
+      }
+
+      // ════════════════════════════════════════════════
+      //  MENU CRUD
+      // ════════════════════════════════════════════════
+      async function loadMenu() {
+        try {
+          const res = await fetch("/api/menu");
+          const data = await res.json();
+          allMenu = data.data || [];
+          renderMenuTable(allMenu);
+        } catch (e) {
+          tampilToast("Gagal memuat menu", "error");
+        }
+      }
+
+      function renderMenuTable(items) {
+        const tbody = document.getElementById("menuTableBody");
+        const empty = document.getElementById("menuEmpty");
+        if (items.length === 0) {
+          tbody.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        tbody.innerHTML = items
+          .map(
+            (item) => `
+    <tr>
+      <td>
+        ${
+          item.img
+            ? `<img src="${item.img}" class="img-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="fallback-thumb" style="display:none">${item.fallback || "☕"}</div>`
+            : `<div class="fallback-thumb">${item.fallback || "☕"}</div>`
+        }
+      </td>
+      <td><strong>${item.name}</strong></td>
+      <td><span class="badge badge-gold">${item.category}</span></td>
+      <td style="color:var(--gold)">Rp ${item.price.toLocaleString("id-ID")}</td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${item.tersedia ? "checked" : ""} onchange="toggleTersedia('${item._id}', this.checked)"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td style="display:flex; gap:0.4rem; flex-wrap:wrap; padding:0.75rem 0.7rem">
+        <button class="btn btn-blue btn-sm" onclick="bukaModalEdit('${item._id}')">✏️ Edit</button>
+        <button class="btn btn-red btn-sm" onclick="hapusMenu('${item._id}', '${item.name}')">🗑 Hapus</button>
+      </td>
+    </tr>
+  `,
+          )
+          .join("");
+      }
+
+      function filterMenu() {
+        const q = document.getElementById("searchMenu").value.toLowerCase();
+        renderMenuTable(
+          allMenu.filter(
+            (m) =>
+              m.name.toLowerCase().includes(q) ||
+              m.category.toLowerCase().includes(q),
+          ),
+        );
+      }
+
+      function bukaModalTambah() {
+        document.getElementById("modalTitle").textContent = "Tambah Menu Baru";
+        document.getElementById("editId").value = "";
+        ["fName", "fPrice", "fDesc", "fImg", "fFallback"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("fCategory").value = "espresso";
+        document.getElementById("modalMenu").classList.add("open");
+      }
+
+      function bukaModalEdit(id) {
+        const item = allMenu.find((m) => m._id === id);
+        if (!item) return;
+        document.getElementById("modalTitle").textContent = "Edit Menu";
+        document.getElementById("editId").value = item._id;
+        document.getElementById("fName").value = item.name;
+        document.getElementById("fCategory").value = item.category;
+        document.getElementById("fPrice").value = item.price;
+        document.getElementById("fDesc").value = item.desc || "";
+        document.getElementById("fImg").value = item.img || "";
+        document.getElementById("fFallback").value = item.fallback || "☕";
+        document.getElementById("modalMenu").classList.add("open");
+      }
+
+      function tutupModal() {
+        document.getElementById("modalMenu").classList.remove("open");
+      }
+
+      async function simpanMenu() {
+        const id = document.getElementById("editId").value;
+        const body = {
+          name: document.getElementById("fName").value.trim(),
+          category: document.getElementById("fCategory").value,
+          price: document.getElementById("fPrice").value,
+          desc: document.getElementById("fDesc").value.trim(),
+          img: document.getElementById("fImg").value.trim(),
+          fallback: document.getElementById("fFallback").value.trim() || "☕",
+        };
+        if (!body.name || !body.price)
+          return tampilToast("Nama dan harga wajib diisi!", "error");
+
+        try {
+          const url = id ? `/api/menu/${id}` : "/api/menu";
+          const method = id ? "PUT" : "POST";
+          const res = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const data = await res.json();
+          if (!data.sukses)
+            return tampilToast(data.pesan || "Gagal menyimpan", "error");
+          tutupModal();
+          tampilToast(
+            id ? "✅ Menu berhasil diupdate!" : "✅ Menu berhasil ditambahkan!",
+            "success",
+          );
+          loadMenu();
+        } catch (e) {
+          tampilToast("Terjadi kesalahan", "error");
+        }
+      }
+
+      async function hapusMenu(id, name) {
+        if (!confirm(`Hapus "${name}"? Tindakan ini tidak bisa dibatalkan.`))
+          return;
+        try {
+          const res = await fetch(`/api/menu/${id}`, { method: "DELETE" });
+          const data = await res.json();
+          if (!data.sukses) return tampilToast(data.pesan, "error");
+          tampilToast(`🗑 "${name}" berhasil dihapus`, "success");
+          loadMenu();
+        } catch (e) {
+          tampilToast("Gagal menghapus", "error");
+        }
+      }
+
+      async function toggleTersedia(id, val) {
+        try {
+          await fetch(`/api/menu/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tersedia: val }),
+          });
+          tampilToast(
+            val ? "✅ Menu ditandai tersedia" : "⚠️ Menu ditandai habis",
+            "success",
+          );
+          const item = allMenu.find((m) => m._id === id);
+          if (item) item.tersedia = val;
+        } catch (e) {
+          tampilToast("Gagal mengubah status", "error");
+        }
+      }
+
+      // ════════════════════════════════════════════════
+      //  KONTAK
+      // ════════════════════════════════════════════════
+      async function loadContacts() {
+        try {
+          const res = await fetch("/api/contacts");
+          const data = await res.json();
+          allContacts = data.data || [];
+          renderContactTable(allContacts);
+
+          const belum = allContacts.filter((c) => !c.sudahDibaca).length;
+          const badge = document.getElementById("unreadBadge");
+          if (belum > 0) {
+            badge.textContent = belum;
+            badge.style.display = "inline";
+          } else badge.style.display = "none";
+        } catch (e) {
+          tampilToast("Gagal memuat pesan", "error");
+        }
+      }
+
+      function renderContactTable(items) {
+        const tbody = document.getElementById("contactTableBody");
+        const empty = document.getElementById("contactEmpty");
+        if (items.length === 0) {
+          tbody.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        tbody.innerHTML = items
+          .map(
+            (c) => `
+    <tr style="${!c.sudahDibaca ? "background:rgba(201,168,76,0.04)" : ""}">
+      <td><strong>${c.name}</strong></td>
+      <td style="color:var(--text-dim)">${c.email}</td>
+      <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-dim)">${c.message}</td>
+      <td style="color:var(--text-dim); white-space:nowrap">${new Date(c.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td>
+      <td><span class="badge ${c.sudahDibaca ? "badge-blue" : "badge-gold"}">${c.sudahDibaca ? "Dibaca" : "Baru"}</span></td>
+      <td style="display:flex; gap:0.4rem; flex-wrap:wrap">
+        <button class="btn btn-blue btn-sm" onclick="lihatPesan('${c._id}')">👁 Lihat</button>
+        ${!c.sudahDibaca ? `<button class="btn btn-green btn-sm" onclick="tandaiBaca('${c._id}')">✓ Baca</button>` : ""}
+        <button class="btn btn-red btn-sm" onclick="hapusPesan('${c._id}')">🗑</button>
+      </td>
+    </tr>
+  `,
+          )
+          .join("");
+      }
+
+      function lihatPesan(id) {
+        const c = allContacts.find((x) => x._id === id);
+        if (!c) return;
+        document.getElementById("pNama").value = c.name;
+        document.getElementById("pEmail").value = c.email;
+        document.getElementById("pPesan").value = c.message;
+        document.getElementById("pWaktu").value = new Date(
+          c.createdAt,
+        ).toLocaleString("id-ID");
+        document.getElementById("modalPesan").classList.add("open");
+        if (!c.sudahDibaca) tandaiBaca(id);
+      }
+
+      function tutupModalPesan() {
+        document.getElementById("modalPesan").classList.remove("open");
+      }
+
+      async function tandaiBaca(id) {
+        try {
+          await fetch(`/api/contacts/${id}/baca`, { method: "PUT" });
+          const c = allContacts.find((x) => x._id === id);
+          if (c) c.sudahDibaca = true;
+          renderContactTable(allContacts);
+          const belum = allContacts.filter((c) => !c.sudahDibaca).length;
+          const badge = document.getElementById("unreadBadge");
+          if (belum > 0) {
+            badge.textContent = belum;
+            badge.style.display = "inline";
+          } else badge.style.display = "none";
+        } catch (e) {}
+      }
+
+      async function hapusPesan(id) {
+        if (!confirm("Hapus pesan ini?")) return;
+        try {
+          const res = await fetch(`/api/contacts/${id}`, { method: "DELETE" });
+          const data = await res.json();
+          if (!data.sukses) return tampilToast(data.pesan, "error");
+          tampilToast("🗑 Pesan dihapus", "success");
+          loadContacts();
+        } catch (e) {
+          tampilToast("Gagal menghapus", "error");
+        }
+      }
+
+      async function hapusSemua() {
+        const sudahBaca = allContacts.filter((c) => c.sudahDibaca);
+        if (sudahBaca.length === 0)
+          return tampilToast("Tidak ada pesan yang sudah dibaca", "error");
+        if (!confirm(`Hapus ${sudahBaca.length} pesan yang sudah dibaca?`))
+          return;
+        await Promise.all(
+          sudahBaca.map((c) =>
+            fetch(`/api/contacts/${c._id}`, { method: "DELETE" }),
+          ),
+        );
+        tampilToast(`🗑 ${sudahBaca.length} pesan dihapus`, "success");
+        loadContacts();
+      }
+
+      // ════════════════════════════════════════════════
+      //  KELOLA PESANAN (ORDERS)
+      // ════════════════════════════════════════════════
+      let allOrders = [];
+
+      async function loadOrders() {
+        try {
+          const res = await fetch("/api/orders");
+          const data = await res.json();
+          allOrders = data.data || [];
+          renderOrdersTable(allOrders);
+          
+          // update stats and badges
+          const newOrders = allOrders.filter(o => o.status === 'baru').length;
+          const badge = document.getElementById("newOrdersBadge");
+          if (newOrders > 0) {
+            badge.textContent = newOrders;
+            badge.style.display = "inline";
+          } else badge.style.display = "none";
+        } catch (e) {
+          tampilToast("Gagal memuat pesanan", "error");
+        }
+      }
+
+      function renderOrdersTable(items) {
+        const tbody = document.getElementById("orderTableBody");
+        const empty = document.getElementById("orderEmpty");
+        if (items.length === 0) {
+          tbody.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+        empty.style.display = "none";
+        tbody.innerHTML = items
+          .map(
+            (o) => {
+              const dateStr = new Date(o.createdAt).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              });
+              
+              const itemsList = o.items.map(i => `${i.name} (${i.qty}x)`).join(", ");
+              
+              let statusBadgeClass = "badge-gold"; // baru
+              if (o.status === "diproses") statusBadgeClass = "badge-blue";
+              if (o.status === "selesai") statusBadgeClass = "badge-green";
+              if (o.status === "batal") statusBadgeClass = "badge-red";
+
+              let actionButtons = "";
+              if (o.status === "baru") {
+                actionButtons = `<button class="btn btn-blue btn-sm" onclick="updateOrderStatus('${o._id}', 'diproses')">⚙️ Proses</button>`;
+              } else if (o.status === "diproses") {
+                actionButtons = `<button class="btn btn-green btn-sm" onclick="updateOrderStatus('${o._id}', 'selesai')">✓ Selesai</button>`;
+              }
+              
+              if (o.status === "baru" || o.status === "diproses") {
+                actionButtons += ` <button class="btn btn-red btn-sm" onclick="updateOrderStatus('${o._id}', 'batal')">✕ Batal</button>`;
+              }
+
+              actionButtons += ` <button class="btn btn-red btn-sm" style="background:transparent; color:var(--red);" onclick="hapusOrder('${o._id}', '${o.invoiceId}')">🗑</button>`;
+
+              return `
+                <tr>
+                  <td><strong>${o.invoiceId}</strong></td>
+                  <td style="color:var(--text-dim); white-space:nowrap">${dateStr}</td>
+                  <td><strong>${o.customerName}</strong></td>
+                  <td><span class="badge badge-gold">${o.tableNumber}</span></td>
+                  <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;" title="${itemsList}">${itemsList}</td>
+                  <td style="color:var(--gold); font-weight:700">Rp ${o.total.toLocaleString("id-ID")}</td>
+                  <td><span class="badge ${o.paymentMethod === 'QRIS' ? 'badge-green' : 'badge-gold'}">${o.paymentMethod}</span></td>
+                  <td><span class="badge ${statusBadgeClass}">${o.status.toUpperCase()}</span></td>
+                  <td style="white-space:nowrap">${actionButtons}</td>
+                </tr>
+              `;
+            }
+          )
+          .join("");
+      }
+
+      async function updateOrderStatus(id, newStatus) {
+        try {
+          const res = await fetch(`/api/orders/${id}/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: newStatus })
+          });
+          const data = await res.json();
+          if (!data.sukses) return tampilToast(data.pesan, "error");
+          tampilToast(`Status pesanan berhasil diperbarui ke ${newStatus.toUpperCase()}`, "success");
+          loadOrders();
+        } catch (e) {
+          tampilToast("Gagal mengupdate status", "error");
+        }
+      }
+
+      async function hapusOrder(id, invoiceId) {
+        if (!confirm(`Hapus pesanan ${invoiceId}?`)) return;
+        try {
+          const res = await fetch(`/api/orders/${id}`, { method: "DELETE" });
+          const data = await res.json();
+          if (!data.sukses) return tampilToast(data.pesan, "error");
+          tampilToast(`🗑 Pesanan ${invoiceId} berhasil dihapus`, "success");
+          loadOrders();
+        } catch (e) {
+          tampilToast("Gagal menghapus pesanan", "error");
+        }
+      }
+
+      async function hapusSemuaSelesaiBatalOrders() {
+        const toDelete = allOrders.filter(o => o.status === 'selesai' || o.status === 'batal');
+        if (toDelete.length === 0) return tampilToast("Tidak ada pesanan Selesai/Batal untuk dibersihkan", "error");
+        if (!confirm(`Hapus ${toDelete.length} pesanan yang sudah selesai atau dibatalkan?`)) return;
+        
+        try {
+          await Promise.all(toDelete.map(o => fetch(`/api/orders/${o._id}`, { method: "DELETE" })));
+          tampilToast(`🗑 ${toDelete.length} pesanan berhasil dibersihkan`, "success");
+          loadOrders();
+        } catch (e) {
+          tampilToast("Gagal membersihkan pesanan", "error");
+        }
+      }
+
+      function filterOrders() {
+        const q = document.getElementById("searchOrders").value.toLowerCase();
+        renderOrdersTable(
+          allOrders.filter(
+            (o) =>
+              o.invoiceId.toLowerCase().includes(q) ||
+              o.customerName.toLowerCase().includes(q)
+          )
+        );
+      }
+
+      // ════════════════════════════════════════════════
+      //  TOAST
+      // ════════════════════════════════════════════════
+      let toastTimer;
+      function tampilToast(msg, type = "success") {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.className = `toast show ${type}`;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
+      }
+
+      // Tutup modal klik luar
+      document.getElementById("modalMenu").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) tutupModal();
+      });
+      document.getElementById("modalPesan").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) tutupModalPesan();
+      });
+    </script>
+  </body>
+</html>

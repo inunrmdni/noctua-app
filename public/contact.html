@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Temukan Kami — Noctua Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css?v=2" />
+    <link rel="manifest" href="/manifest.json">
+
+    <meta name="theme-color" content="#6f4e37">
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/index.html" class="nav-logo">🦉 NOCTUA</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">Beranda</a></li>
+        <li><a href="/menu.html">Menu</a></li>
+        <li><a href="/about.html">Tentang Kami</a></li>
+        <li><a href="/contact.html" class="active">Lokasi</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle tema">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+        <button class="nav-toggle" id="navToggle">☰</button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="page-hero">
+        <p class="section-label">— Mampir Yuk —</p>
+        <h1>Temukan Kami</h1>
+        <p>Kami senang mendengar dari kamu. Kapan saja, siang atau malam.</p>
+      </section>
+
+      <section class="section contact-section">
+        <div
+          id="formSuccess"
+          class="alert-success"
+          style="display: none; max-width: 1000px; margin: 0 auto 2rem"
+        >
+          <span>✅</span> <span id="successMsg"></span>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-form-wrap">
+            <h2>Kirim Pesan</h2>
+            <div class="contact-form">
+              <div class="form-group">
+                <label for="name">Nama Kamu</label>
+                <input type="text" id="name" placeholder="Your Name" />
+              </div>
+              <div class="form-group">
+                <label for="email">Alamat Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="example@gmail.com"
+                />
+              </div>
+              <div class="form-group">
+                <label for="message">Pesan</label>
+                <textarea
+                  id="message"
+                  rows="5"
+                  placeholder="Ceritakan apa saja..."
+                ></textarea>
+              </div>
+              <button class="btn btn-primary full-width" onclick="kirimPesan()">
+                Kirim Pesan ✉️
+              </button>
+            </div>
+          </div>
+
+          <div class="contact-info">
+            <h2>Kunjungi Kami</h2>
+            <div class="info-item">
+              <span class="info-icon">📍</span>
+              <div>
+                <strong>Cabang Utama</strong>
+                <p>Jl. Kopi Malam No.7<br />Kudus, Jawa Tengah</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">⏰</span>
+              <div>
+                <strong>Jam Buka</strong>
+                <p>Senin–Jumat: 07.00–22.00<br />Sabtu–Minggu: 08.00–23.00</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">📞</span>
+              <div>
+                <strong>Telepon / WhatsApp</strong>
+                <p>+62 812-3456-7890</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">📧</span>
+              <div>
+                <strong>Email</strong>
+                <p>halo@noctuacoffee.id</p>
+              </div>
+            </div>
+
+            <div class="api-demo">
+              <h3>🔌 Status Toko Sekarang</h3>
+              <p>Cek buka/tutup secara real-time:</p>
+              <div class="api-result" id="apiStatus">Memuat...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">🦉 NOCTUA COFFEE</span>
+          <p>Dibuat dengan penuh perhatian. Disajikan dengan jiwa.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/index.html">Beranda</a><a href="/menu.html">Menu</a>
+          <a href="/about.html">Tentang Kami</a
+          ><a href="/contact.html">Lokasi</a>
+        </div>
+        <div class="footer-info">
+          <p>☕ Senin–Minggu · 07.00–22.00</p>
+          <p>📍 Jl. Kopi Malam No.7, Kudus</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Noctua Coffee. Dibangun dengan Node.js & Express.js</p>
+      </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+      // Cek status toko via API
+      fetch("/api/status")
+        .then((r) => r.json())
+        .then((d) => {
+          document.getElementById("apiStatus").innerHTML =
+            `<span class="${d.buka ? "open" : "closed"}">${d.buka ? "🟢" : "🔴"} ${d.message}</span>`;
+        })
+        .catch(() => {
+          document.getElementById("apiStatus").textContent =
+            "Tidak dapat memuat status.";
+        });
+
+      // Kirim pesan ke API
+      function kirimPesan() {
+        const nama = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const pesan = document.getElementById("message").value.trim();
+        if (!nama || !email || !pesan) {
+          alert("Mohon isi semua kolom terlebih dahulu.");
+          return;
+        }
+
+        fetch("/api/contacts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: nama, email: email, message: pesan }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.sukses) {
+              document.getElementById("successMsg").textContent = data.pesan;
+              document.getElementById("formSuccess").style.display = "block";
+              document.getElementById("name").value = "";
+              document.getElementById("email").value = "";
+              document.getElementById("message").value = "";
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              alert("Gagal mengirim pesan: " + data.pesan);
+            }
+          })
+          .catch((err) => {
+            alert("Terjadi kesalahan: " + err.message);
+          });
+      }
+    </script>
+  </body>
+</html>

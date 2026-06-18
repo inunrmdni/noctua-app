@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Noctua Coffee — Di Mana Malam Bertemu Seni</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css?v=2" />
+    <link rel="manifest" href="/manifest.json">
+
+    <meta name="theme-color" content="#6f4e37">
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <a href="/index.html" class="nav-logo">🦉 NOCTUA</a>
+      <ul class="nav-links">
+        <li><a href="/index.html" class="active">Beranda</a></li>
+        <li><a href="/menu.html">Menu</a></li>
+        <li><a href="/about.html">Tentang Kami</a></li>
+        <li><a href="/contact.html">Lokasi</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle tema">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+        <button class="nav-toggle" id="navToggle">☰</button>
+      </div>
+    </nav>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="hero-tagline">Est. 2026 · Kudus</p>
+          <h1 class="hero-title">Di Mana Malam<br /><em>Bertemu Seni</em></h1>
+          <p class="hero-sub">
+            Kopi single origin, diseduh dengan penuh obsesi.<br />Tempat
+            perlindungan bagi mereka yang merasakan perbedaannya.
+          </p>
+          <div class="hero-cta">
+            <a href="/menu.html" class="btn btn-primary">Lihat Menu</a>
+            <a href="/about.html" class="btn btn-ghost">Cerita Kami</a>
+          </div>
+        </div>
+        <div class="hero-scroll">gulir ↓</div>
+      </section>
+
+      <!-- FITUR -->
+      <section class="section features">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-img-wrap">
+              <img
+                src="/images/feature-1.jpg"
+                alt="Single Origin"
+                class="feature-img"
+                onerror="
+                  this.style.display = 'none';
+                  this.nextElementSibling.style.display = 'flex';
+                "
+              />
+              <div class="img-placeholder" style="display: none">🌍</div>
+            </div>
+            <h3>Single Origin</h3>
+            <p>
+              Setiap biji kopi bisa dilacak ke kebunnya. Ethiopia, Flores,
+              Toraja — kami beli langsung dari petani yang kami percaya.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-img-wrap">
+              <img
+                src="/images/feature-2.jpg"
+                alt="Sangrai Mingguan"
+                class="feature-img"
+                onerror="
+                  this.style.display = 'none';
+                  this.nextElementSibling.style.display = 'flex';
+                "
+              />
+              <div class="img-placeholder" style="display: none">🔥</div>
+            </div>
+            <h3>Sangrai Mingguan</h3>
+            <p>
+              Disangrai setiap minggu di tempat kami. Kesegaran maksimal. Setiap
+              cangkir mencerminkan tanggal sangrai.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-img-wrap">
+              <img
+                src="/images/feature-3.jpg"
+                alt="Racikan Barista"
+                class="feature-img"
+                onerror="
+                  this.style.display = 'none';
+                  this.nextElementSibling.style.display = 'flex';
+                "
+              />
+              <div class="img-placeholder" style="display: none">🎨</div>
+            </div>
+            <h3>Racikan Barista</h3>
+            <p>
+              Barista kami terlatih di Melbourne dan Kopenhagen. Latte art
+              adalah bahasa yang kami kuasai dengan fasih.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED MENU -->
+      <section class="section featured-menu" id="featuredMenuSection" style="display: none;">
+        <div class="section-header">
+          <p class="section-label">— Pilihan Unggulan —</p>
+          <h2>Pilihan Malam Ini</h2>
+        </div>
+        <div class="featured-grid" id="featuredGrid">
+        </div>
+        <div class="center-btn">
+          <a href="/menu.html" class="btn btn-primary">Lihat Semua Menu</a>
+        </div>
+      </section>
+
+      <!-- QUOTE -->
+      <section class="section quote-section">
+        <blockquote>
+          <p>"Kopi adalah bahasa tersendiri."</p>
+          <cite>— Jackie Chan</cite>
+        </blockquote>
+      </section>
+
+      <!-- JAM BUKA -->
+      <section class="section hours-section">
+        <div class="hours-inner">
+          <div class="hours-text">
+            <h2>Kunjungi Kami</h2>
+            <p>
+              Sudut Kota yang tenang, di mana waktu melambat dan kopi terasa
+              lebih nikmat.
+            </p>
+            <a href="/contact.html" class="btn btn-primary">Lihat Lokasi</a>
+          </div>
+          <div class="hours-info">
+            <div class="hours-row">
+              <span>Senin – Jumat</span><span>07.00 – 22.00</span>
+            </div>
+            <div class="hours-row">
+              <span>Sabtu – Minggu</span><span>08.00 – 23.00</span>
+            </div>
+            <div class="hours-row highlight">
+              <span>📍 Alamat</span><span>Jl. Kopi Malam No.7, Kudus</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">🦉 NOCTUA COFFEE</span>
+          <p>Dibuat dengan penuh perhatian. Disajikan dengan jiwa.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/index.html">Beranda</a>
+          <a href="/menu.html">Menu</a>
+          <a href="/about.html">Tentang Kami</a>
+          <a href="/contact.html">Lokasi</a>
+        </div>
+        <div class="footer-info">
+          <p>☕ Senin–Minggu · 07.00–22.00</p>
+          <p>📍 Jl. Kopi Malam No.7, Kudus</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Noctua Coffee.</p>
+      </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const featuredSection = document.getElementById("featuredMenuSection");
+        const featuredGrid = document.getElementById("featuredGrid");
+
+        fetch("/api/menu")
+          .then(res => res.json())
+          .then(resData => {
+            if (!resData.sukses) {
+              throw new Error(resData.pesan || "Gagal mengambil data menu");
+            }
+            
+            const items = resData.data || [];
+            // Filter only available items
+            const availableItems = items.filter(item => item.tersedia !== false);
+
+            if (availableItems.length === 0) {
+              // Hide the featured menu section entirely if no menu is available
+              featuredSection.style.display = "none";
+              return;
+            }
+
+            // Show section
+            featuredSection.style.display = "block";
+            featuredGrid.innerHTML = "";
+
+            // Take up to 3 featured items
+            const featuredItems = availableItems.slice(0, 3);
+
+            featuredItems.forEach((item, index) => {
+              const cardClass = index % 2 === 0 ? "dark" : "light";
+              const card = document.createElement("div");
+              card.className = `featured-card ${cardClass}`;
+
+              // Handle image display with fallback and normalization
+              const imgUrl = window.normalizeImagePath ? window.normalizeImagePath(item.img) : item.img;
+              const imgTag = imgUrl 
+                ? `<img src="${imgUrl}" alt="${item.name}" class="featured-img" onerror="this.style.display = 'none'; this.nextElementSibling.style.display = 'flex';" />` 
+                : "";
+              const displayStyle = imgUrl ? "style='display: none;'" : "style='display: flex;'";
+
+              card.innerHTML = `
+                <div class="featured-img-wrap">
+                  ${imgTag}
+                  <div class="img-placeholder" ${displayStyle}>${item.fallback || "☕"}</div>
+                </div>
+                <h3>${item.name}</h3>
+                <p>${item.desc || ""}</p>
+                <span class="price">Rp ${(item.price || 0).toLocaleString("id-ID")}</span>
+              `;
+              featuredGrid.appendChild(card);
+            });
+
+            // Trigger scroll reveal for featured cards
+            if (window.applyScrollReveal) {
+              window.applyScrollReveal(".featured-card");
+            }
+          })
+          .catch(err => {
+            console.error("Error loading featured menu:", err);
+            featuredSection.style.display = "none";
+          });
+      });
+    </script>
+  </body>
+</html>

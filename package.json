@@ -1,0 +1,28 @@
+{
+  "name": "noctua-coffee",
+  "version": "1.0.0",
+  "description": "Artisan Coffee Shop Web App built with Express.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.18.2",
+    "lowdb": "^7.0.1",
+    "morgan": "^1.10.0",
+    "nedb": "^1.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "coffee",
+    "express",
+    "nodejs",
+    "web"
+  ],
+  "author": "Noctua Coffee",
+  "license": "MIT"
+}
