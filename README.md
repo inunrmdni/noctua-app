@@ -1,6 +1,6 @@
 # 🦉 Noctua Coffee — Artisan Coffee Shop Web App
 
-Noctua Coffee adalah sebuah aplikasi web kedai kopi premium (*artisan coffee shop*) yang dibangun dengan menggunakan **Node.js**, **Express.js**, dan database Mysql. Aplikasi ini dirancang dengan estetika modern bergaya gelap (*dark mode*) yang mewah, dilengkapi dengan ornamen *glassmorphism* dan micro-animation untuk memberikan pengalaman pengguna yang sangat premium.
+Noctua Coffee adalah sebuah aplikasi web kedai kopi premium (*artisan coffee shop*) yang dibangun dengan menggunakan **Node.js**, **Express.js**, dan database. Aplikasi ini dirancang dengan estetika modern bergaya gelap (*dark mode*) yang mewah, dilengkapi dengan ornamen *glassmorphism* dan micro-animation untuk memberikan pengalaman pengguna yang sangat premium.
 
 Aplikasi ini mencakup halaman utama interaktif untuk pelanggan (menjelajah menu, memesan dari meja/takeaway, menghubungi tim) serta panel dashboard admin yang aman untuk mengelola pesanan masuk, memanipulasi menu (CRUD), dan mengelola pesan kontak.
 
