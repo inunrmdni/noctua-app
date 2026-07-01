@@ -1,6 +1,6 @@
 # 🦉 Noctua Coffee — Artisan Coffee Shop Web App
 
-Noctua Coffee adalah sebuah aplikasi web kedai kopi premium (*artisan coffee shop*) yang dibangun dengan menggunakan **Node.js**, **Express.js**, dan database tertanam **NeDB**. Aplikasi ini dirancang dengan estetika modern bergaya gelap (*dark mode*) yang mewah, dilengkapi dengan ornamen *glassmorphism* dan micro-animation untuk memberikan pengalaman pengguna yang sangat premium.
+Noctua Coffee adalah sebuah aplikasi web kedai kopi premium (*artisan coffee shop*) yang dibangun dengan menggunakan **Node.js**, **Express.js**, dan database Mysql. Aplikasi ini dirancang dengan estetika modern bergaya gelap (*dark mode*) yang mewah, dilengkapi dengan ornamen *glassmorphism* dan micro-animation untuk memberikan pengalaman pengguna yang sangat premium.
 
 Aplikasi ini mencakup halaman utama interaktif untuk pelanggan (menjelajah menu, memesan dari meja/takeaway, menghubungi tim) serta panel dashboard admin yang aman untuk mengelola pesanan masuk, memanipulasi menu (CRUD), dan mengelola pesan kontak.
 
@@ -62,14 +62,14 @@ Aplikasi ini dibagi menjadi dua bagian utama: **Halaman Pelanggan (Customer Inte
 
 Proyek ini dibagi secara terstruktur untuk 4 anggota tim demi menjamin integrasi frontend, backend, database, dan aspek pendukung berjalan maksimal:
 
-1. **Orang 1: Moh. Hafiz Mahfud** — *Pendahuluan & Tampilan Visual (Frontend / UI)*
+1. **Moh. Hafiz Mahfud (202451107)** — *Pendahuluan & Tampilan Visual (Frontend / UI)*
    * **Fokus**: Menjelaskan konsep, desain visual, dan interaktivitas halaman pelanggan.
    * **Tugas**:
      * Merancang konsep estetika gelap (*dark luxury aesthetic*) menggunakan Vanilla CSS (`public/css/style.css`).
      * Membuat efek interaktif client-side menggunakan Vanilla JS (`public/js/main.js`) seperti filter kategori menu dan animasi saat scroll (*scroll reveal*).
      * Mengonfigurasi dan menguji fitur PWA (*Progressive Web App*) melalui `public/manifest.json` dan `public/service-worker.js`.
 
-2. **Orang 2: Muhammad Ainun** — *Core Server & Sistem Routing (Backend Dasar)*
+2. **Muhammad Ainun (202451108)** — *Core Server & Sistem Routing (Backend Dasar)*
    * **Fokus**: Menjelaskan mesin utama aplikasi dan sistem penyajian halaman web.
    * **Tugas**:
      * Melakukan setup server Node.js dengan Express.js serta konfigurasi port (`app.js`).
@@ -77,14 +77,14 @@ Proyek ini dibagi secara terstruktur untuk 4 anggota tim demi menjamin integrasi
      * Membuat sistem *Page Routing* statis untuk melayani halaman HTML (Beranda, Menu, Tentang Kami, Lokasi) dari folder `public`.
      * Menjelaskan arsitektur *Client-Side Rendering* (CSR) yang digunakan web ini untuk memuat data menu secara dinamis melalui Fetch API.
 
-3. **Orang 3: M. Zikri** — *REST API & Manajemen Data (Backend Lanjut)*
+3. **M. Zikri (202451081)** — *REST API & Manajemen Data (Backend Lanjut)*
    * **Fokus**: Menjelaskan jalur komunikasi data dan fitur fungsional.
    * **Tugas**:
      * Mengonfigurasi database tertanam NeDB (`database/db.js`) untuk memuat data menu secara otomatis (*seeding*), data pesanan, dan pesan kontak.
      * Membuat API Endpoint (`routes/api.js`) untuk transaksi menu (CRUD), pengiriman pesanan (`POST /api/orders`), dan pengecekan status buka/tutup toko (`GET /api/status`).
      * Mengintegrasikan proses pengiriman form pesan pelanggan (kontak) ke database backend.
 
-4. **Orang 4: Moh. Khusnul Ibad** — *Panel Admin, Konfigurasi & Kesimpulan*
+4. **Moh. Khusnul Ibad (202451105)** — *Panel Admin, Konfigurasi & Kesimpulan*
    * **Fokus**: Menjelaskan dashboard administrasi staf kafe, otorisasi, penanganan error, dan dependensi proyek.
    * **Tugas**:
      * Mengelola Panel Admin (`public/admin.html`), sistem autentikasi sesi berbasis cookie (`adminSession`), dan dashboard pemantauan pesanan staf kafe.
